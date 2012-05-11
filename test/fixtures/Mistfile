@@ -24,13 +24,13 @@ proc('queue::urgent', {
     }
 });
 
-task('build::clean', function (done) {
+task('build::clean', function (log, done) {
   setTimeout(function () {
     done();
   }, 500);
 });
 
-task('build::assets', function (done) {
+task('build::assets', function (log, done) {
   setTimeout(function () {
     done();
   }, 500);
@@ -41,7 +41,7 @@ task('sync', function () {
   // this is sync task
 });
 
-deploy('staging::integration', {
+cloud('staging::integration', {
     server: 'alchemist.qualiancy.com'
   , node: {
         version: '0.6.17'

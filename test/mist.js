@@ -13,7 +13,7 @@ describe('Project', function () {
       .with.keys('web', 'queue::urgent');
     project.should.have.property('_tasks')
       .with.keys('build::assets', 'build::clean', 'sync');
-    project.should.have.property('_deploys')
+    project.should.have.property('_clouds')
       .with.keys('staging::integration');
   });
 
