@@ -1,0 +1,51 @@
+// -*- mode: javascript -*-
+// vi: set ft=javascript :
+
+var fs = require('fs');
+
+// name, opts
+proc('web', {
+    type: 'server'
+  , file: __dirname + '/app.js'
+  , host: 'joecool.com'
+  , balance: true
+  , workers: 2
+  , tasks: [ 'build::assets' ]
+});
+
+// name, opts
+proc('queue::urgent', {
+    type: 'proc'
+  , file: __dirname + '/queue.js'
+  , workers: 1
+  , args: '--interval 5000'
+  , env: {
+      QUEUE: 'urgent'
+    }
+});
+
+task('build::clean', function (done) {
+  setTimeout(function () {
+    done();
+  }, 500);
+});
+
+task('build::assets', function (done) {
+  setTimeout(function () {
+    done();
+  }, 500);
+});
+
+
+task('sync', function () {
+  // this is sync task
+});
+
+deploy('staging::integration', {
+    server: 'alchemist.qualiancy.com'
+  , node: {
+        version: '0.6.17'
+      , env: 'staging'
+    }
+  , tasks: [ 'build::clean', 'sync' ]
+});
