@@ -8,14 +8,13 @@ proc('web', {
     type: 'server'
   , file: __dirname + '/app.js'
   , host: 'joecool.com'
-  , balance: true
   , workers: 2
   , tasks: [ 'build::assets' ]
 });
 
 // name, opts
 proc('queue::urgent', {
-    type: 'proc'
+    type: 'node'
   , file: __dirname + '/queue.js'
   , workers: 1
   , args: '--interval 5000'
