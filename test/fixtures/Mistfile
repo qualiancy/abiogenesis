@@ -1,50 +1,84 @@
 // -*- mode: javascript -*-
 // vi: set ft=javascript :
 
-var fs = require('fs');
+/**
+ * Task - build::clean
+ *
+ * Sample task to clean up our
+ * build assets
+ */
 
-// name, opts
-proc('web', {
-    type: 'server'
-  , file: __dirname + '/app.js'
-  , host: 'joecool.com'
-  , workers: 2
-  , tasks: [ 'build::assets' ]
-});
+task('build::clean')
+  .action(function(log, done) {
+    setTimeout(function () {
+      log.info('build::clean completed');
+      done();
+    }, 1000);
+  });
 
-// name, opts
-proc('queue::urgent', {
-    type: 'node'
-  , file: __dirname + '/queue.js'
-  , workers: 1
-  , args: '--interval 5000'
-  , env: {
-      QUEUE: 'urgent'
-    }
-});
+/**
+ * Task - build::assets
+ *
+ * Sample task to build our assets
+ */
 
-task('build::clean', function (log, done) {
-  setTimeout(function () {
-    done();
-  }, 500);
-});
+task('build::assets')
+  .pre('build::clean')
+  .action(function(log, done) {
+    setTimeout(function () {
+      log.info('build::assets completed');
+      done();
+    }, 1000);
+  });
 
-task('build::assets', function (log, done) {
-  setTimeout(function () {
-    done();
-  }, 500);
-});
+/**
+ * Process - web
+ *
+ * A sample process that will start
+ * `app.js` balanced between 2 workers.
+ *
+ * A balanced process must export a server
+ * with a listen method. Furthermore, it will
+ * run the build::assets task before running.
+ */
 
+proc('web')
+  .type('balanced')
+  .file(__dirname + '/app.js')
+  .host('qualiancy.com')
+  .workers(2)
+  .pre('build::assets');
 
-task('sync', function () {
-  // this is sync task
-});
+/**
+ * Process - que
+ *
+ * A sample process that will start
+ * `app.js` as a node process.
+ *
+ * It will wait to start until after the
+ * web process has started.
+ */
 
-cloud('staging::integration', {
-    server: 'alchemist.qualiancy.com'
-  , node: {
-        version: '0.6.17'
-      , env: 'staging'
-    }
-  , tasks: [ 'build::clean', 'sync' ]
-});
+proc('queue::urgent')
+  .type('node')
+  .file(__dirname + '/queue.js')
+  .workers(1)
+  .args('--interval 5000')
+  .env('QUEUE', 'urgent')
+  .waitFor('web');
+
+/**
+ * Deployment to cloud - staging::integration
+ *
+ * A definition to deploy to a alchemist
+ * deployment server.
+ *
+ * It will run the `build::clean` task
+ * before it is deployed.
+ */
+
+cloud('staging::integration')
+  .host('alchemist.qualiancy.com')
+  .node('version', '0.6.17')
+  .node('env', 'staging')
+  .pre('build::clean');

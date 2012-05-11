@@ -9,12 +9,12 @@ describe('Project', function () {
     var file = __dirname + '/fixtures/Mistfile'
       , project = mist.Project.fromMistfile(file);
     project.should.be.instanceof(mist.Project);
-    project.should.have.property('_procs')
-      .with.keys('web', 'queue::urgent');
     project.should.have.property('_tasks')
-      .with.keys('build::assets', 'build::clean', 'sync');
+      .and.be.an('array').with.length(2);
+    project.should.have.property('_procs')
+      .and.be.an('array').with.length(2);
     project.should.have.property('_clouds')
-      .with.keys('staging::integration');
+      .and.be.an('array').with.length(1);
   });
 
 });
