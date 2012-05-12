@@ -9,6 +9,7 @@
  */
 
 task('build::clean')
+  .post('reset::logs')
   .action(function(log, done) {
     setTimeout(function () {
       log.info('build::clean completed');
@@ -27,6 +28,20 @@ task('build::assets')
   .action(function(log, done) {
     setTimeout(function () {
       log.info('build::assets completed');
+      done();
+    }, 1000);
+  });
+
+/**
+ * Task - reset::logs
+ *
+ * Sample task to build our assets
+ */
+
+task('reset::logs')
+  .action(function(log, done) {
+    setTimeout(function () {
+      log.info('reset::logs completed');
       done();
     }, 1000);
   });
