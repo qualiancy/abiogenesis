@@ -22,7 +22,9 @@
     "quantum": "0.1.x"
   },
   "optionalDependencies": {
-      "chai": "git://github.com/logicalparadox/chai.git"
+      "chai": "*"
+    , "chai-spies": "*"
+    , "chai-timers": "*"
     , "mocha": "*"
   },
   "engines": {
