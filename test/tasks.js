@@ -6,12 +6,12 @@ var chai = require('chai')
 chai.use(chaiTimers);
 chai.use(chaiSpies);
 
-var mist = require('..')
-  , Task = require('../lib/mist/elements/task')
-  , TaskRunner = require('../lib/mist/runners/task');
+var abiogenesis = require('..')
+  , Task = require('../lib/abiogenesis/elements/task')
+  , TaskRunner = require('../lib/abiogenesis/runners/task');
 
 describe('Tasks', function () {
-  var project = new mist.Project()
+  var project = new abiogenesis.Project()
     , task
     , timerTesting = new chai.Timer('testing')
     , timerTestingDep = new chai.Timer('testing::2')

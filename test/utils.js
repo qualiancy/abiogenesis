@@ -1,7 +1,7 @@
 var chai = require('chai')
   , should = chai.should();
 
-var _ = require('../lib/mist/utils');
+var _ = require('../lib/abiogenesis/utils');
 
 describe('utils', function () {
 

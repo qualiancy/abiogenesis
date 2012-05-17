@@ -1,33 +1,27 @@
 {
-  "author": "Jake Luer <jake@qualiancy.com> (http://qualiancy.com)",
-  "name": "mist",
-  "description": "Deployment cli for alchemist.",
-  "version": "0.0.0",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/qualiancy/mist.git"
-  },
-  "main": "./index",
-  "bin": {
-      "mist": "./bin/mist"
-  },
-  "scripts": {
-    "test": "make test"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "drip": "0.2.x",
-    "optimist": "0.3.x",
-    "orchid": "0.0.x",
-    "quantum": "0.1.x"
-  },
-  "optionalDependencies": {
-      "chai": "*"
-    , "chai-spies": "*"
-    , "chai-timers": "*"
-    , "mocha": "*"
-  },
-  "engines": {
-    "node": "*"
-  }
+    "author": "Jake Luer <jake@qualiancy.com> (http://qualiancy.com)"
+  , "name": "abiogenesis"
+  , "description": "The start of all things."
+  , "version": "0.0.0"
+  , "repository": {
+        "type": "git"
+      , "url": "git://github.com/qualiancy/abiogenesis.git"
+    }
+  , "main": "./index"
+  , "scripts": {
+      "test": "make test"
+    }
+  , "dependencies": {
+        "drip": "0.2.x"
+    }
+  , "devDependencies": {
+        "chai": "*"
+      , "chai-spies": "*"
+      , "chai-timers": "*"
+      , "mocha": "*"
+    }
+  , "optionalDependencies": {}
+  , "engines": {
+        "node": "*"
+    }
 }

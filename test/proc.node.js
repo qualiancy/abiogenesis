@@ -8,8 +8,8 @@ chai.use(chaiSpies);
 chai.use(chaiTimers);
 chai.use(chaiPid);
 
-var Proc = require('../lib/mist/elements/proc')
-  , NodeProcess = require('../lib/mist/runners/process/node');
+var Proc = require('../lib/abiogenesis/elements/proc')
+  , NodeProcess = require('../lib/abiogenesis/runners/process/node');
 
 describe('Node Process', function () {
   var proc_raw = new Proc('test')
@@ -63,7 +63,6 @@ describe('Node Process', function () {
       pid.should.be.not.be.alive;
       done();
     });
-
     proc.stop();
   });
 });

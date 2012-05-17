@@ -1,3 +1,3 @@
-module.exports = process.env.MIST_COV
-  ? require('./lib-cov/mist')
-  : require('./lib/mist');
+module.exports = process.env.ABIOGENESIS_COV
+  ? require('./lib-cov/abiogenesis')
+  : require('./lib/abiogenesis');
