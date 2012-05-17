@@ -52,13 +52,13 @@ task('reset::logs')
  * A sample process that will start
  * `app.js` balanced between 2 workers.
  *
- * A balanced process must export a server
+ * A `balancer` process must export a server
  * with a listen method. Furthermore, it will
  * run the build::assets task before running.
  */
 
 proc('web')
-  .type('balanced')
+  .type('balancer')
   .file(__dirname + '/app.js')
   .host('qualiancy.com')
   .workers(2)
