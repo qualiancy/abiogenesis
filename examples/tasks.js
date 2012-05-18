@@ -6,7 +6,7 @@ project
   .set('task', 'task::main')
   .pre('task::1')
   .post('task::2')
-  .action(function (log, done) {
+  .action(function (done) {
     setTimeout(function () {
       console.log('task main');
       done();
@@ -16,7 +16,7 @@ project
 
 project
   .set('task', 'task::1')
-  .action(function (log, done) {
+  .action(function (done) {
     setTimeout(function () {
       console.log('task 1');
       done();
@@ -25,7 +25,7 @@ project
 
 project
   .set('task', 'task::2')
-  .action(function (log, done) {
+  .action(function (done) {
     setTimeout(function () {
       console.log('task 2');
       done();

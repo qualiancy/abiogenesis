@@ -15,14 +15,14 @@ describe('Tasks', function () {
     , task
     , timerTesting = new chai.Timer('testing')
     , timerTestingDep = new chai.Timer('testing::2')
-    , runTesting = chai.spy(function (log, done) {
+    , runTesting = chai.spy(function (done) {
         timerTesting.start();
         setTimeout(function () {
           timerTesting.stop();
           done();
         }, 30);
       })
-    , runTestingDep = chai.spy(function (log, done) {
+    , runTestingDep = chai.spy(function (done) {
         timerTestingDep.start();
         setTimeout(function () {
           timerTestingDep.stop();
