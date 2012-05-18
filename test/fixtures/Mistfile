@@ -75,7 +75,8 @@ proc('web')
  */
 
 proc('queue::urgent')
-  .type('node')
+  .type('exec')
+  .cmd('node')
   .file(__dirname + '/queue.js')
   .workers(1)
   .args('--interval 5000')

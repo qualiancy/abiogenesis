@@ -9,14 +9,14 @@ chai.use(chaiTimers);
 chai.use(chaiPid);
 
 var Proc = require('../lib/abiogenesis/elements/proc')
-  , NodeProcess = require('../lib/abiogenesis/runners/process/node');
+  , ExecProcess = require('../lib/abiogenesis/runners/process/exec');
 
 describe('Node Process', function () {
   var proc_raw = new Proc('test')
-    , proc = new NodeProcess(proc_raw);
+    , proc = new ExecProcess(proc_raw);
 
   proc_raw
-    .file('./fixtures/nodeProc.js')
+    .file('./fixtures/execProc.js')
     .cwd(__dirname);
 
   function checkAlive (ev, done) {
@@ -26,7 +26,6 @@ describe('Node Process', function () {
           proc.prog.pid.should.be.alive;
           proc.state.should.equal(1);
         });
-
 
     proc.once(ev, spy);
     proc.once('stdout', function (data) {
