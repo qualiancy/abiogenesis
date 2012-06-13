@@ -1,2 +1,0 @@
---globals chai,abiogenesis
---require ./test/helpers/runner

@@ -1,6 +1,8 @@
-var should = chai.should();
+var chai = require('chai')
+  , abiogenesis = require('..')
+  , Sol = require('sol');
 
-if (!Sol) var Sol = require('sol');
+var should = chai.should();
 
 var Definition = abiogenesis.Definition;
 
