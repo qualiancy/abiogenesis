@@ -12,9 +12,8 @@
       "test": "make test"
     }
   , "dependencies": {
-        "drip": "0.3.x"
-      , "sol": "0.1.x"
-      , "super": "*"
+      , "drip": "0.3.x"
+      , "super": "git://github.com/logicalparadox/super.git#feature/self-extension"
     }
   , "devDependencies": {
         "chai": "*"
