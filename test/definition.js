@@ -1,6 +1,5 @@
 var chai = require('chai')
-  , abiogenesis = require('..')
-  , Sol = require('sol');
+  , abiogenesis = require('..');
 
 var should = chai.should();
 
