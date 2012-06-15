@@ -13,7 +13,7 @@
     }
   , "dependencies": {
         "drip": "0.3.x"
-      , "super": "git://github.com/logicalparadox/super.git#feature/self-extension"
+      , "super": "0.2.x"
     }
   , "devDependencies": {
         "chai": "*"
