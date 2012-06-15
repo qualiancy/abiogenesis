@@ -1,4 +1,10 @@
 
+0.2.1 / 2012-06-15 
+==================
+
+  * Merge branch 'feature/array-reqs'
+  * add support for def requires as array and multiple params
+
 0.2.0 / 2012-06-15 
 ==================
 
