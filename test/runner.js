@@ -1,6 +1,9 @@
 var chai = require('chai')
+  , chaiSpies = require('chai-spies')
   , abiogenesis = require('..')
   , Sol = require('sol');
+
+chai.use(chaiSpies);
 
 var should = chai.should();
 
@@ -34,9 +37,15 @@ describe('Runner', function () {
     });
 
     it('can create a definition', function () {
+      var defspy = chai.spy()
+        , runspy = chai.spy();
+      runner.on([ 'definition', 'add' ], defspy);
+      runner.on([ 'runnable', 'add' ], runspy);
       var def1 = runner.define('pair', 'def 1');
       def1.should.be.instanceof(Definition);
-      runner._definitions.has('pair/def 1').should.be.true;
+      runner._definitions.has('/pair/def 1').should.be.true;
+      runspy.should.have.been.called.once;
+      defspy.should.have.been.called.once;
     });
 
     it('can determine if a definition already exists', function () {
