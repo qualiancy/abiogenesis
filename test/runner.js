@@ -1,10 +1,8 @@
 var chai = require('chai')
   , chaiSpies = require('chai-spies')
-  , chaiTimers = require('chai-timers')
   , abiogenesis = require('..');
 
 chai.use(chaiSpies);
-chai.use(chaiTimers);
 
 var should = chai.should();
 

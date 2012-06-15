@@ -18,7 +18,6 @@
   , "devDependencies": {
         "chai": "*"
       , "chai-spies": "*"
-      , "chai-timers": "*"
       , "mocha": "*"
     }
   , "optionalDependencies": {}
