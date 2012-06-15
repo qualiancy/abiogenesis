@@ -9,22 +9,18 @@ var Definition = abiogenesis.Definition;
 describe('Definition', function () {
 
   it('can be constructed', function () {
-    var def = new Definition('tester', 'test');
-    def.should.have.property('_name', 'tester');
-    def.should.have.property('_type', 'test');
-    def.should.have.property('_requires')
-      .an.instanceof(Sol);
-    def.should.have.property('_attrs')
-      .an.instanceof(Sol);
+    var def = new Definition('test', 'tester');
+    def.should.have.deep.property('_def.name', 'tester');
+    def.should.have.deep.property('_def.type', 'test');
+    def.should.have.property('_requires').an('array');
   });
 
   it('can define requirements', function () {
-    var def = new Definition('tester', 'test')
-      , req = new Definition('required', 'test');
+    var def = new Definition('test', 'tester')
+      , req = new Definition('test', 'required');
     def.should.respondTo('requires');
     def.requires(req);
-    should.exist(def._requires.get('test/required'));
-    def._requires.get('test/required').should.deep.equal(req);
+    def._requires.should.include(req);
   });
 
 });
