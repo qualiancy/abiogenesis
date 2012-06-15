@@ -14,12 +14,34 @@ describe('Definition', function () {
     def.should.have.property('_requires').an('array');
   });
 
-  it('can define requirements', function () {
-    var def = new Definition('test', 'tester')
-      , req = new Definition('test', 'required');
-    def.should.respondTo('requires');
-    def.requires(req);
-    def._requires.should.include(req);
+  describe('requirements', function () {
+
+    it('can be defined singularly', function () {
+      var def = new Definition('test', 'tester')
+        , req = new Definition('test', 'required');
+      def.should.respondTo('requires');
+      def.requires(req);
+      def._requires.should.include(req);
+    });
+
+    it('can be defined as an array', function () {
+      var def = new Definition('test', 'one')
+        , req1 = new Definition('test', 'req1')
+        , req2 = new Definition('test', 'req2');
+      def.should.respondTo('requires');
+      def.requires([ req1, req2 ]);
+      def._requires.should.include(req1, req2);
+    });
+
+    it('can be defined as arguments', function () {
+      var def = new Definition('test', 'one')
+        , req1 = new Definition('test', 'req1')
+        , req2 = new Definition('test', 'req2');
+      def.should.respondTo('requires');
+      def.requires(req1, req2);
+      def._requires.should.include(req1, req2);
+    });
+
   });
 
 });
