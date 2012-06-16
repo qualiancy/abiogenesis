@@ -90,7 +90,7 @@ describe('Runner', function () {
 
     it('can create a definition', function () {
       var defspy = chai.spy();
-      runner.on([ 'definition', 'add' ], defspy);
+      runner.on([ 'definition', 'add', 'definition' ], defspy);
       var def1 = runner.addDefinition('definition', 'def 1');
       def1.should.be.instanceof(Definition);
       runner._definitions.should.have.length(1).include(def1);
