@@ -22,7 +22,6 @@ describe('Definition', function () {
         }
     });
 
-    console.log(Task.prototype);
     var def = new Task('build');
     def.should.have.deep.property('_opts.name', 'build');
     def.should.have.deep.property('_opts.type', 'task');
