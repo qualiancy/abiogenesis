@@ -83,7 +83,7 @@ describe('Runner', function () {
 
     it('can use a protoype of definition / runnable pair', function () {
       var spy = chai.spy();
-      runner.useDefinition(Definition, spy);
+      runner.register(Definition, spy);
       runner._types.should.have.property('definition')
         .to.deep.equal({ definition: Definition, action: spy });
     });
@@ -130,8 +130,8 @@ describe('Runner', function () {
             setTimeout(next, 10);
           });
 
-      runner.useDefinition(Thing1, iterator1);
-      runner.useDefinition(Thing2, iterator2);
+      runner.register(Thing1, iterator1);
+      runner.register(Thing2, iterator2);
 
       var thing1a = runner.addDefinition('thing1', 'a')
         , thing1b = runner.addDefinition('thing1', 'b')
@@ -170,8 +170,8 @@ describe('Runner', function () {
             setTimeout(next, 10);
           });
 
-      runner.useDefinition(Thing1, iterator1);
-      runner.useDefinition(Thing2, iterator2);
+      runner.register(Thing1, iterator1);
+      runner.register(Thing2, iterator2);
 
       var thing1a = runner.addDefinition('thing1', 'a')
         , thing1b = runner.addDefinition('thing1', 'b')

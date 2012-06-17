@@ -64,7 +64,7 @@ describe('Context', function () {
             setTimeout(next, 100);
           });
 
-          runner.useDefinition(Definition, iterator);
+          runner.register(Definition, iterator);
           runner.addContext(base);
           runner.addDefinition(def2a);
           base.addDefinition(def1);
@@ -91,12 +91,11 @@ describe('Context', function () {
             }, 100);
           });
 
-          runner.useDefinition(Definition, iterator);
+          runner.register(Definition, iterator);
           runner.addContext(base);
           runner.addDefinition(def2a);
           base.addDefinition(def1);
           base.addDefinition(def2b);
-
 
           runner.runContext('context', 'base', function (err) {
             should.exist(err);
@@ -150,7 +149,7 @@ function integration (useRunner) {
       , base = new Context('base', { runner: runner });
 
     if (runner)
-      runner.useDefinition(Definition, function () {});
+      runner.register(Definition, function () {});
 
     base.addDefinition(definition);
     base._definitions.should.include(definition);
@@ -166,7 +165,7 @@ function integration (useRunner) {
         , base = new Context('base')
         , suite = new Context('suite');
 
-      runner.useDefinition(Definition, function () {});
+      runner.register(Definition, function () {});
 
       base.addContext(suite);
       suite.addDefinition(definition);
@@ -186,7 +185,7 @@ function integration (useRunner) {
         , base = new Context('base')
         , suite = new Context('suite');
 
-      runner.useDefinition(Definition, function () {});
+      runner.register(Definition, function () {});
 
       base.addContext(suite);
       suite.addDefinition(definition);
