@@ -6,7 +6,8 @@ chai.use(chaiSpies);
 
 var should = chai.should();
 
-var Definition = abiogenesis.Definition
+var Context = abiogenesis.Context
+  , Definition = abiogenesis.Definition
   , Runner = abiogenesis.Runner;
 
 describe('Runner', function () {
@@ -75,38 +76,50 @@ describe('Runner', function () {
   });
 
   describe('define flow', function () {
-    var runner;
+    var runner
+      , def
+      , Task
+      , task;
 
     before(function () {
       runner = new Runner();
+      def = new Definition('def 1')
+      Task = Definition.extend('task')
+      task = new Task('task 1');
     });
 
-    it('can use a protoype of definition / runnable pair', function () {
+    it('can register a constructor of definition / runnable pair', function () {
       var spy = chai.spy();
       runner.register(Definition, spy);
       runner._types.should.have.property('definition')
         .to.deep.equal({ definition: Definition, action: spy });
     });
 
-    it('can create a definition', function () {
-      var defspy = chai.spy();
-      runner.on([ 'definition', 'add', 'definition' ], defspy);
-      var def1 = runner.addDefinition('definition', 'def 1');
-      def1.should.be.instanceof(Definition);
-      runner._definitions.should.have.length(1).include(def1);
-      defspy.should.have.been.called.once;
+    it('can be pushed a definition', function () {
+      runner.should.respondTo('push');
+      runner.push(def);
+      runner.register(Task, chai.spy());
+      runner.push(task);
     });
 
-    it('cannot recreate an already existing definition', function () {
+    it('can be pushed a context', function () {
+      runner.should.respondTo('push');
+      var ctx = new Context();
+      runner.push(ctx);
+    });
+
+    it('cannot push an already existing definition', function () {
       (function () {
-        var defErr = runner.addDefinition('definition', 'def 1');
+        var defErr = runner.push(def);
       }).should.throw('definition named `def 1` already defined');
     });
 
-    it('cannot create a definition for a non-existent pair', function () {
+    it('cannot push a definition for a non-existent pair', function () {
+      var NonTask = Definition.extend('nontask')
+        , nontask = new NonTask('nontask');
       (function () {
-        var defErr = runner.addDefinition('not here', 'def 1');
-      }).should.throw('no definition for type `not here`');
+        var defErr = runner.push(nontask);
+      }).should.throw('Absent register for definition of type `nontask`');
     });
 
   });
@@ -133,13 +146,15 @@ describe('Runner', function () {
       runner.register(Thing1, iterator1);
       runner.register(Thing2, iterator2);
 
-      var thing1a = runner.addDefinition('thing1', 'a')
-        , thing1b = runner.addDefinition('thing1', 'b')
-            .requires(thing1a)
-        , thing2a = runner.addDefinition('thing2', 'a')
-            .requires(thing1b)
-        , thing2b = runner.addDefinition('thing2', 'b')
-            .requires(thing2a);
+      var thing1a = new Thing1('a')
+        , thing1b = new Thing1('b').requires(thing1a)
+        , thing2a = new Thing2('a').requires(thing1b)
+        , thing2b = new Thing2('b').requires(thing2a);
+
+      runner.push(thing1a)
+      runner.push(thing1b)
+      runner.push(thing2a)
+      runner.push(thing2b);
 
       runner.runDefinition('thing2', 'b', function (err) {
         should.not.exist(err);
@@ -173,13 +188,15 @@ describe('Runner', function () {
       runner.register(Thing1, iterator1);
       runner.register(Thing2, iterator2);
 
-      var thing1a = runner.addDefinition('thing1', 'a')
-        , thing1b = runner.addDefinition('thing1', 'b')
-            .requires(thing1a)
-        , thing2a = runner.addDefinition('thing2', 'a')
-            .requires(thing1b)
-        , thing2b = runner.addDefinition('thing2', 'b')
-            .requires(thing2a);
+      var thing1a = new Thing1('a')
+        , thing1b = new Thing1('b').requires(thing1a)
+        , thing2a = new Thing2('a').requires(thing1b)
+        , thing2b = new Thing2('b').requires(thing2a);
+
+      runner.push(thing1a)
+      runner.push(thing1b)
+      runner.push(thing2a)
+      runner.push(thing2b);
 
       runner.runDefinition('thing2', 'b', function (err) {
         should.exist(err);

@@ -65,10 +65,9 @@ describe('Context', function () {
           });
 
           runner.register(Definition, iterator);
-          runner.addContext(base);
-          runner.addDefinition(def2a);
-          base.addDefinition(def1);
-          base.addDefinition(def2b);
+          runner.push(def2a);
+          base.push(def1);
+          base.push(def2b);
 
           runner.runContext('context', 'base', function (err) {
             should.not.exist(err);
@@ -92,10 +91,9 @@ describe('Context', function () {
           });
 
           runner.register(Definition, iterator);
-          runner.addContext(base);
-          runner.addDefinition(def2a);
-          base.addDefinition(def1);
-          base.addDefinition(def2b);
+          runner.push(def2a);
+          base.push(def1);
+          base.push(def2b);
 
           runner.runContext('context', 'base', function (err) {
             should.exist(err);
@@ -114,22 +112,22 @@ describe('Context', function () {
 function integration (useRunner) {
 
   it('can nest indefinitely', function () {
-    Context.should.respondTo('addContext');
+    Context.should.respondTo('push');
     var runner = useRunner ? new Runner() : null
       , base = new Context('base', { runner: runner })
       , suite = new Context('suite')
       , subsuite = new Context('subsuite')
       , subsuite2 = new Context('subsuite2');
 
-    base.addContext(suite);
+    base.push(suite);
     base._contexts.should.include(suite);
     suite._parent.should.deep.equal(base);
 
-    suite.addContext(subsuite);
+    suite.push(subsuite);
     suite._contexts.should.include(subsuite);
     subsuite._parent.should.deep.equal(suite);
 
-    suite.addContext(subsuite2);
+    suite.push(subsuite2);
     suite._contexts.should.include(subsuite2);
     subsuite2._parent.should.deep.equal(suite);
 
@@ -143,7 +141,7 @@ function integration (useRunner) {
   });
 
   it('can add definitions', function () {
-    Context.should.respondTo('addDefinition');
+    Context.should.respondTo('push');
     var runner = useRunner ? new Runner() : null
       , definition = new Definition('test')
       , base = new Context('base', { runner: runner });
@@ -151,7 +149,7 @@ function integration (useRunner) {
     if (runner)
       runner.register(Definition, function () {});
 
-    base.addDefinition(definition);
+    base.push(definition);
     base._definitions.should.include(definition);
 
     if (runner)
@@ -167,15 +165,15 @@ function integration (useRunner) {
 
       runner.register(Definition, function () {});
 
-      base.addContext(suite);
-      suite.addDefinition(definition);
+      base.push(suite);
+      suite.push(definition);
 
-      runner.pushContext(base);
+      runner.push(base);
       runner._contexts.should.include(base, suite);
       runner._definitions.should.include(definition);
 
       var def = new Definition('test 2');
-      base.addDefinition(def);
+      base.push(def);
       runner._definitions.should.include(def);
     });
 
@@ -187,8 +185,8 @@ function integration (useRunner) {
 
       runner.register(Definition, function () {});
 
-      base.addContext(suite);
-      suite.addDefinition(definition);
+      base.push(suite);
+      suite.push(definition);
 
       suite.runner = runner;
       base.runner.should.deep.equal(runner);
@@ -196,7 +194,7 @@ function integration (useRunner) {
       runner._definitions.should.include(definition);
 
       var def = new Definition('test 2');
-      base.addDefinition(def);
+      base.push(def);
       runner._definitions.should.include(def);
     });
   }
