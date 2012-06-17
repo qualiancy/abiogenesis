@@ -51,28 +51,62 @@ describe('Context', function () {
 
     describe('running', function () {
 
-      it('can run a single context', function (done) {
-        var runner = new Runner()
-          , base = new Context('base', { runner: runner })
-          , def1 = new Definition('thing 1')
-          , def2 = new Definition('thing 2');
+      describe('single level context', function () {
 
-        var iterator = chai.spy(function (def, next) {
-          next();
+        it('can run successfully', function (done) {
+          var runner = new Runner({ strategy: 'series' })
+            , base = new Context('base', { runner: runner })
+            , def1 = new Definition('thing 1')
+            , def2a = new Definition('thing 2a')
+            , def2b = new Definition('thing 2b').requires(def2a);
+
+          var iterator = chai.spy(function (def, next) {
+            setTimeout(next, 100);
+          });
+
+          runner.useDefinition(Definition, iterator);
+          runner.addContext(base);
+          runner.addDefinition(def2a);
+          base.addDefinition(def1);
+          base.addDefinition(def2b);
+
+          runner.runContext('context', 'base', function (err) {
+            should.not.exist(err);
+            iterator.should.have.been.called.exactly(3);
+            done();
+          });
         });
 
-        runner.useDefinition(Definition, iterator);
-        runner.addContext(base);
+        it('can bail on error', function (done) {
+          var runner = new Runner({ strategy: 'series' })
+            , base = new Context('base', { runner: runner })
+            , def1 = new Definition('thing 1')
+            , def2a = new Definition('thing 2a')
+            , def2b = new Definition('thing 2b').requires(def2a);
 
-        base.addDefinition(def1);
-        base.addDefinition(def2);
+          var iterator = chai.spy(function (def, next) {
+            setTimeout(function () {
+              if (def._opts.name === 'thing 2a') return next('err');
+              next();
+            }, 100);
+          });
 
-        runner.runContext('base', function (err) {
-          should.not.exist(err);
-          done();
+          runner.useDefinition(Definition, iterator);
+          runner.addContext(base);
+          runner.addDefinition(def2a);
+          base.addDefinition(def1);
+          base.addDefinition(def2b);
+
+
+          runner.runContext('context', 'base', function (err) {
+            should.exist(err);
+            err.should.equal('err');
+            iterator.should.have.been.called.lt(3);
+            done();
+          });
         });
+
       });
-
     });
   });
 
