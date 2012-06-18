@@ -6,7 +6,8 @@ chai.use(chaiSpies);
 
 var should = chai.should();
 
-var Definition = abiogenesis.Definition
+var Context = abiogenesis.Context
+  , Definition = abiogenesis.Definition
   , Runner = abiogenesis.Runner;
 
 describe('Runner', function () {
@@ -16,7 +17,7 @@ describe('Runner', function () {
     it('can be constructed independantly', function () {
       var runner = new Runner();
       runner.should.have.property('_types').an('object');
-      runner.should.have.property('_definitions').an('object');
+      runner.should.have.property('_definitions').an('array');
     });
 
     it('can be extended', function () {
@@ -75,39 +76,50 @@ describe('Runner', function () {
   });
 
   describe('define flow', function () {
-    var runner;
+    var runner
+      , def
+      , Task
+      , task;
 
     before(function () {
       runner = new Runner();
+      def = new Definition('def 1')
+      Task = Definition.extend('task')
+      task = new Task('task 1');
     });
 
-    it('can use a protoype of definition / runnable pair', function () {
+    it('can register a constructor of definition / runnable pair', function () {
       var spy = chai.spy();
-      runner.use('pair', Definition, spy);
-      runner._types.should.have.property('pair')
+      runner.register(Definition, spy);
+      runner._types.should.have.property('definition')
         .to.deep.equal({ definition: Definition, action: spy });
     });
 
-    it('can create a definition', function () {
-      var defspy = chai.spy();
-      runner.on([ 'pair', 'add' ], defspy);
-      var def1 = runner.define('pair', 'def 1');
-      def1.should.be.instanceof(Definition);
-      runner._definitions.should.have.property('/pair/def 1')
-        .deep.equal(def1);
-      defspy.should.have.been.called.once;
+    it('can be pushed a definition', function () {
+      runner.should.respondTo('push');
+      runner.push(def);
+      runner.register(Task, chai.spy());
+      runner.push(task);
     });
 
-    it('cannot recreate an already existing definition', function () {
-      (function () {
-        var defErr = runner.define('pair', 'def 1');
-      }).should.throw('pair named `def 1` already defined');
+    it('can be pushed a context', function () {
+      runner.should.respondTo('push');
+      var ctx = new Context();
+      runner.push(ctx);
     });
 
-    it('cannot create a definition for a non-existent pair', function () {
+    it('cannot push an already existing definition', function () {
       (function () {
-        var defErr = runner.define('not here', 'def 1');
-      }).should.throw('no definition for type `not here`');
+        var defErr = runner.push(def);
+      }).should.throw('definition named `def 1` already defined');
+    });
+
+    it('cannot push a definition for a non-existent pair', function () {
+      var NonTask = Definition.extend('nontask')
+        , nontask = new NonTask('nontask');
+      (function () {
+        var defErr = runner.push(nontask);
+      }).should.throw('Absent register for definition of type `nontask`');
     });
 
   });
@@ -116,8 +128,8 @@ describe('Runner', function () {
 
     it('can run a suite of dependant things', function (done) {
       var runner = new Runner()
-        , Thing1 = Definition.extend()
-        , Thing2 = Definition.extend()
+        , Thing1 = Definition.extend('thing1')
+        , Thing2 = Definition.extend('thing2')
         , iterator1 = chai.spy(function (def, next) {
             def.should.be.instanceof(Thing1);
             def.should.not.be.instanceof(Thing2);
@@ -131,18 +143,20 @@ describe('Runner', function () {
             setTimeout(next, 10);
           });
 
-      runner.use('thing1', Thing1, iterator1);
-      runner.use('thing2', Thing2, iterator2);
+      runner.register(Thing1, iterator1);
+      runner.register(Thing2, iterator2);
 
-      var thing1a = runner.define('thing1', 'a')
-        , thing1b = runner.define('thing1', 'b')
-            .requires(thing1a)
-        , thing2a = runner.define('thing2', 'a')
-            .requires(thing1b)
-        , thing2b = runner.define('thing2', 'b')
-            .requires(thing2a);
+      var thing1a = new Thing1('a')
+        , thing1b = new Thing1('b').requires(thing1a)
+        , thing2a = new Thing2('a').requires(thing1b)
+        , thing2b = new Thing2('b').requires(thing2a);
 
-      runner.run('thing2', 'b', function (err) {
+      runner.push(thing1a)
+      runner.push(thing1b)
+      runner.push(thing2a)
+      runner.push(thing2b);
+
+      runner.runDefinition('thing2', 'b', function (err) {
         should.not.exist(err);
         iterator1.should.have.been.called.twice;
         iterator2.should.have.been.called.twice;
@@ -153,14 +167,14 @@ describe('Runner', function () {
 
     it('will bail of an error occurs', function (done) {
       var runner = new Runner()
-        , Thing1 = Definition.extend()
-        , Thing2 = Definition.extend()
+        , Thing1 = Definition.extend('thing1')
+        , Thing2 = Definition.extend('thing2')
         , iterator1 = chai.spy(function (def, next) {
             def.should.be.instanceof(Thing1);
             def.should.not.be.instanceof(Thing2);
             next.should.be.a('function');
             setTimeout(function () {
-              if (def._def.name == 'b') return next('err');
+              if (def._opts.name == 'b') return next('err');
               next();
             }, 10);
           })
@@ -171,18 +185,24 @@ describe('Runner', function () {
             setTimeout(next, 10);
           });
 
-      runner.use('thing1', Thing1, iterator1);
-      runner.use('thing2', Thing2, iterator2);
+      runner.register(Thing1, iterator1);
+      runner.register(Thing2, iterator2);
 
-      var thing1a = runner.define('thing1', 'a')
-        , thing1b = runner.define('thing1', 'b')
-            .requires(thing1a)
-        , thing2a = runner.define('thing2', 'a')
-            .requires(thing1b)
-        , thing2b = runner.define('thing2', 'b')
-            .requires(thing2a);
+      var thing1a = new Thing1('a')
+        , thing1b = new Thing1('b')
+        , thing2a = new Thing2('a')
+        , thing2b = new Thing2('b');
 
-      runner.run('thing2', 'b', function (err) {
+      thing2b.requires(thing2a);
+      thing2a.requires(thing1b);
+      thing1b.requires(thing1a);
+
+      runner.push(thing1a)
+      runner.push(thing1b)
+      runner.push(thing2a)
+      runner.push(thing2b);
+
+      runner.runDefinition('thing2', 'b', function (err) {
         should.exist(err);
         err.should.equal('err');
         iterator1.should.have.been.called.twice;
