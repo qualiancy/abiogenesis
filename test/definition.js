@@ -12,7 +12,6 @@ describe('Definition', function () {
     def.should.have.deep.property('_opts.name', 'test');
     def.should.have.deep.property('_opts.type', 'definition');
     def.should.have.property('_requires').an('array');
-    def.should.have.property('_context', null);
   });
 
   it('can be extended', function () {
@@ -26,7 +25,6 @@ describe('Definition', function () {
     def.should.have.deep.property('_opts.name', 'build');
     def.should.have.deep.property('_opts.type', 'task');
     def.should.have.property('_requires').an('array');
-    def.should.have.property('_context', null);
     def.should.respondTo('action');
     def.action();
     def.should.have.property('__action', true);

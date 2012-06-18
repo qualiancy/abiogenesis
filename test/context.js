@@ -188,7 +188,7 @@ function integration (useRunner) {
       base.push(suite);
       suite.push(definition);
 
-      suite.runner = runner;
+      base.runner = runner;
       base.runner.should.deep.equal(runner);
       runner._contexts.should.include(base, suite);
       runner._definitions.should.include(definition);

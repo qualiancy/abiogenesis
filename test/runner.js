@@ -189,9 +189,13 @@ describe('Runner', function () {
       runner.register(Thing2, iterator2);
 
       var thing1a = new Thing1('a')
-        , thing1b = new Thing1('b').requires(thing1a)
-        , thing2a = new Thing2('a').requires(thing1b)
-        , thing2b = new Thing2('b').requires(thing2a);
+        , thing1b = new Thing1('b')
+        , thing2a = new Thing2('a')
+        , thing2b = new Thing2('b');
+
+      thing2b.requires(thing2a);
+      thing2a.requires(thing1b);
+      thing1b.requires(thing1a);
 
       runner.push(thing1a)
       runner.push(thing1b)
