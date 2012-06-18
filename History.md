@@ -1,4 +1,22 @@
 
+0.3.0 / 2012-06-18 
+==================
+
+  * code cleanup
+  * Merge branch 'feature/context'
+  * comments
+  * integration api cleanup
+  * refactor runner api for simplicity
+  * rename addDefinition to register for runner
+  * runContext from runner and tests
+  * add context constructor + tests
+  * using breeze for dependancy running
+  * switching to breeze `dag` dependancy sorting/execution
+  * starting context feature
+  * expose Context on main export
+  * runner tests function with renamed methods
+  * defintion now specified type of extension
+
 0.2.1 / 2012-06-15 
 ==================
 
