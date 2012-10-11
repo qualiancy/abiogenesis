@@ -1,7 +1,7 @@
 {
     "author": "Jake Luer <jake@qualiancy.com> (http://qualiancy.com)"
   , "name": "abiogenesis"
-  , "description": "The start of all things."
+  , "description": "Asyncronous, nested 'task' runner framework with dependency resolution."
   , "version": "0.3.2"
   , "repository": {
         "type": "git"
