@@ -1,4 +1,11 @@
 
+0.4.0 / 2012-10-11 
+==================
+
+  * update readme
+  * update tasks example to work
+  * update breeze dependancy
+
 0.3.2 / 2012-07-15 
 ==================
 
