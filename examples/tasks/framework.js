@@ -3,7 +3,7 @@ var abiogenesis = require('../..')
   , Runnable = abiogenesis.Runnable
   , Definition = abiogenesis.Definition;
 
-var TaskDefinition = Definition.extend({
+var Task = Definition.extend('task', {
 
     action: function (fn) {
       this._action = fn;
@@ -21,27 +21,34 @@ var TaskRunner = Runner.extend({
     }
 
   , initialize: function () {
-      this.use('task', TaskDefinition, this.taskRun.bind(this));
+      this.register(Task, this.taskRun.bind(this));
+    }
+
+  , define: function (name) {
+      var task = new Task(name);
+      this.push(task);
+      return task;
     }
 
   , taskRun: function (def, done) {
-      console.log('task run');
       def._action(done);
     }
 
   , taskPre: function (def) {
-      console.log('task pre');
+      var name = def._opts.name;
+      console.log('pre hook: %s', name);
     }
 
   , taskPost: function (def) {
-      console.log('task post');
+      var name = def._opts.name;
+      console.log('post hook: %s', name);
     }
 
   , taskError: function (err, def) {
-      console.log('task err');
+      var name = def._opts.name;
+      console.log('err hook: %s', name);
     }
 
 });
 
 module.exports = TaskRunner;
-
