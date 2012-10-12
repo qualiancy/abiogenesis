@@ -1,4 +1,18 @@
 
+0.5.0 / 2012-10-11 
+==================
+
+  * add travis badge to readme
+  * travis also tests node 0.8.x
+  * convert tests to use bootstrap
+  * add test bootstrap
+  * fix bug when def or ctx was not found on run command
+  * add travis.yml
+  * Release 0.4.0
+  * update readme
+  * update tasks example to work
+  * update breeze dependancy
+
 0.4.0 / 2012-10-11 
 ==================
 
