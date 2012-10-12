@@ -212,6 +212,26 @@ describe('Runner', function () {
 
     });
 
+    it('will gracefully error if definition does not exist', function (done) {
+      var runner = new Runner()
+        , Thing1 = Definition.extend('thing1');
+
+      runner.register(Thing1, function (def, next) {
+        next();
+      });
+
+      var thing1a = new Thing1('a');
+      runner.push(thing1a);
+
+      runner.runDefinition('thing1', 'b', function (err) {
+        should.exist(err);
+        err.should.be.instanceof(Error)
+          .and.have.property('message', "Definition `b` of type `thing1` does not exist.");
+        done();
+      });
+
+    });
+
   });
 
 });

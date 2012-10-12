@@ -103,6 +103,25 @@ describe('Context', function () {
           });
         });
 
+        it('will bail on non existant context', function (done) {
+          var runner = new Runner({ strategy: 'series' })
+            , base = new Context('base', { runner: runner })
+            , def1 = new Definition('thing 1');
+
+          runner.register(Definition, function (def, next) {
+            next();
+          });
+
+          base.push(def1);
+
+          runner.runContext('context', 'test', function (err) {
+            should.exist(err);
+            err.should.be.instanceof(Error)
+              .and.have.property('message', 'Context `test` of type `context` does not exist.');
+            done();
+          });
+        });
+
       });
     });
   });
@@ -156,7 +175,7 @@ function integration (useRunner) {
       runner._definitions.should.include(definition);
   });
 
-  if (!useRunner) {
+  if (useRunner) {
     it('can be pushed to a runner', function () {
       var runner = new Runner()
         , definition = new Definition('test')
