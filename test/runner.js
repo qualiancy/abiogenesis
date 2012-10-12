@@ -1,11 +1,3 @@
-var chai = require('chai')
-  , chaiSpies = require('chai-spies')
-  , abiogenesis = require('..');
-
-chai.use(chaiSpies);
-
-var should = chai.should();
-
 var Context = abiogenesis.Context
   , Definition = abiogenesis.Definition
   , Runner = abiogenesis.Runner;

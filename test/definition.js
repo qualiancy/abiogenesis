@@ -1,8 +1,3 @@
-var chai = require('chai')
-  , abiogenesis = require('..');
-
-var should = chai.should();
-
 var Definition = abiogenesis.Definition;
 
 describe('Definition', function () {
